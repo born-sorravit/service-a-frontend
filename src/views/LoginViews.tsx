@@ -15,11 +15,13 @@ import { IResponse } from "@/interfaces/response.interface";
 import { loginSchema } from "@/schema/login.schema";
 import { encryptPassword } from "@/utils/hashPassword";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 function LoginViews() {
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [titleDialog, setTitleDialog] = React.useState("");
   const [descriptionDialog, setDescriptionDialog] = React.useState("");
@@ -33,8 +35,6 @@ function LoginViews() {
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
-      setOpen(true);
-
       const username = values.username;
       const password = values.password;
       const passwordSecret = process.env.NEXT_PUBLIC_SECRET || "";
@@ -54,18 +54,14 @@ function LoginViews() {
         username,
         encryptedPassword
       )) as IResponse<unknown>;
-      console.log(response.data);
 
       if (response.data) {
-        // Handle successful registration
-        setTitleDialog("Login Successful");
-        setDescriptionDialog(
-          "Thank you for logging in! You can now access your account."
-        );
         form.reset();
         form.clearErrors();
+        router.push("/home");
       } else {
         // Handle registration error
+        setOpen(true);
         setTitleDialog("Login Failed");
         setDescriptionDialog("Something went wrong. Please try again.");
       }
