@@ -1,33 +1,126 @@
+"use client";
+import { AuthServices } from "@/app/api/auth.api";
+import { CustomDialog } from "@/components/common/CustomDialog";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-label";
+import { IResponse } from "@/interfaces/response.interface";
+import { loginSchema } from "@/schema/login.schema";
+import { encryptPassword } from "@/utils/hashPassword";
+import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
+import { useForm } from "react-hook-form";
+import z from "zod";
 
 function LoginViews() {
+  const [open, setOpen] = React.useState(false);
+  const [titleDialog, setTitleDialog] = React.useState("");
+  const [descriptionDialog, setDescriptionDialog] = React.useState("");
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    try {
+      setOpen(true);
+
+      const username = values.username;
+      const password = values.password;
+      const passwordSecret = process.env.NEXT_PUBLIC_SECRET || "";
+
+      const encryptedPassword = await encryptPassword(
+        password,
+        passwordSecret,
+        username
+      );
+      console.log({
+        username,
+        encryptedPassword,
+        passwordSecret,
+      });
+
+      const response = (await AuthServices.login(
+        username,
+        encryptedPassword
+      )) as IResponse<unknown>;
+      console.log(response.data);
+
+      if (response.data) {
+        // Handle successful registration
+        setTitleDialog("Login Successful");
+        setDescriptionDialog(
+          "Thank you for logging in! You can now access your account."
+        );
+        form.reset();
+        form.clearErrors();
+      } else {
+        // Handle registration error
+        setTitleDialog("Login Failed");
+        setDescriptionDialog("Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      // Handle registration error
+      console.error("Login error:", error);
+    }
+  };
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-sm space-y-6">
         <h1 className="text-2xl font-semibold text-center">Login</h1>
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="username">Username</Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder="Enter your username"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your username" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Create a password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <Button className="w-full">Sign In</Button>
-        </div>
+            <Button className="w-full">Sign In</Button>
+          </form>
+        </Form>
       </div>
+      <CustomDialog
+        open={open}
+        setOpen={setOpen}
+        title={titleDialog}
+        description={descriptionDialog}
+      />
     </div>
   );
 }
