@@ -39,8 +39,20 @@ function RegisterViews() {
       const email = values.email;
       const username = values.username;
       const password = values.password;
+      const passwordSecret = process.env.NEXT_PUBLIC_SECRET || "";
 
-      const encryptedPassword = await encryptPassword(password, name, email);
+      const encryptedPassword = await encryptPassword(
+        password,
+        passwordSecret,
+        username
+      );
+
+      console.log({
+        username,
+        encryptedPassword,
+        passwordSecret,
+      });
+
       const registerDto = {
         name,
         email,
@@ -63,7 +75,6 @@ function RegisterViews() {
     } catch (error) {
       // Handle registration error
       console.error("Registration error:", error);
-    } finally {
       setTitleDialog("Registration Failed");
       setDescriptionDialog("Something went wrong. Please try again.");
     }
