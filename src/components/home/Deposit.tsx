@@ -26,6 +26,7 @@ import { IResponse } from "@/interfaces/response.interface";
 import { CustomDialog } from "../common/CustomDialog";
 import { ICurrency } from "@/interfaces/currency.interface";
 import { IDepositResponse } from "@/interfaces/transaction.interface";
+import { ECurrency } from "@/enums/currency.enum";
 
 interface DepositProps {
   walletId: string;
@@ -114,7 +115,7 @@ function Deposit({ walletId, currencies, refetch }: DepositProps) {
                       <FormLabel>Currency</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        defaultValue={ECurrency.USD}
                       >
                         <FormControl>
                           <SelectTrigger className="w-[80px]">

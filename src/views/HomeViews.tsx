@@ -10,10 +10,13 @@ import { useCurrencyStore } from "@/stores/currency/currency.modal";
 import { CurrencyServices } from "@/app/api/currency.api";
 import { ICurrency } from "@/interfaces/currency.interface";
 import { IResponse } from "@/interfaces/response.interface";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 function HomeViews() {
-  const { user, refetch } = useUserStore();
+  const { user, refetch, reset } = useUserStore();
   const { currency, setCurrency } = useCurrencyStore();
+  const router = useRouter();
 
   const fetchCurrency = async () => {
     try {
@@ -31,18 +34,32 @@ function HomeViews() {
     }
   };
 
+  const handleLogout = async () => {
+    reset();
+    router.push("/");
+  };
+
   useEffect(() => {
     fetchCurrency();
   }, []);
+
   return (
     <div className="p-6 max-w-xl mx-auto space-y-3">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        Service A Frontend
-      </h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Service A Frontend</h1>
+        <Button
+          variant="destructive"
+          className="cursor-pointer"
+          size="sm"
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      </div>
 
       <UserInfo user={user} />
 
-      <Tabs defaultValue="withdraw" className="w-full">
+      <Tabs defaultValue="deposit" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="deposit">Deposit</TabsTrigger>
           <TabsTrigger value="withdraw">Withdraw</TabsTrigger>

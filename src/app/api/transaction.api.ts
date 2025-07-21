@@ -11,9 +11,18 @@ const deposit = async (walletId: string, depositDto: IDeposit) => {
 
 const withdraw = async (walletId: string, withdrawDto: IWithdraw) => {
   const path = `/common/wallet/withdraw/${walletId}`;
-  const response = await httpClient().post(path, {
-    ...withdrawDto,
-  });
+  const apiKey = process.env.NEXT_PUBLIC_API_KEY_SERVICE_A || "";
+  const response = await httpClient().post(
+    path,
+    {
+      ...withdrawDto,
+    },
+    {
+      headers: {
+        "x-api-key": apiKey,
+      },
+    }
+  );
   return response.data;
 };
 

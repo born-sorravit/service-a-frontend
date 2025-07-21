@@ -9,6 +9,7 @@ import {
 import { Label } from "../ui/label";
 import { Mail, User, Wallet } from "lucide-react";
 import { IUserInfo } from "@/interfaces/user.interface";
+import { formatNumber } from "@/utils/formatNumber";
 
 interface UserInfoProps {
   user: IUserInfo;
@@ -44,7 +45,8 @@ export default function UserInfo({ user }: UserInfoProps) {
           <div>
             <Label className="text-sm">Wallet Balance</Label>
             <p className="text-sm text-muted-foreground">
-              {user?.wallet?.balance} {user?.wallet?.currency}
+              {user?.wallet?.balance && formatNumber(user?.wallet?.balance)}{" "}
+              {user?.wallet?.currency}
             </p>
           </div>
         </div>

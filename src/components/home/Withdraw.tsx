@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import {
@@ -11,7 +11,7 @@ import {
 import { Button } from "../ui/button";
 import { ICurrency } from "@/interfaces/currency.interface";
 import { useForm } from "react-hook-form";
-import z from "zod";
+import z, { object } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { withdrawSchema } from "@/schema/withdraw.schema";
 import { TransactionServices } from "@/app/api/transaction.api";
@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { CustomDialog } from "../common/CustomDialog";
+import { ECurrency } from "@/enums/currency.enum";
 
 interface WithdrawProps {
   walletId: string;
@@ -116,7 +117,7 @@ function Withdraw({ walletId, currencies, refetch }: WithdrawProps) {
                       <FormLabel>Currency</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        defaultValue={ECurrency.USD}
                       >
                         <FormControl>
                           <SelectTrigger className="w-[80px]">
