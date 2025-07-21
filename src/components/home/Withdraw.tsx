@@ -10,9 +10,10 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
+import { ICurrency } from "@/interfaces/currency.interface";
 
 interface WithdrawProps {
-  currencies: string[];
+  currencies: ICurrency[];
 }
 function Withdraw({ currencies }: WithdrawProps) {
   return (
@@ -30,9 +31,9 @@ function Withdraw({ currencies }: WithdrawProps) {
                 <SelectValue placeholder="Choose currency" />
               </SelectTrigger>
               <SelectContent>
-                {currencies.map((currency) => (
-                  <SelectItem key={currency} value={currency}>
-                    {currency}
+                {currencies.map((item) => (
+                  <SelectItem key={item.id} value={item.currency}>
+                    {item.currency}
                   </SelectItem>
                 ))}
               </SelectContent>

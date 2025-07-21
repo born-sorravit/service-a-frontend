@@ -8,3 +8,12 @@ export interface IWithdraw {
   currency: string;
   toUsername: string;
 }
+
+export interface IDepositResponse {
+  id: string;
+  depositAmount: number;
+  depositCurrency: string;
+  rateToUSD: number;
+  totalBalance: number;
+  currencyBalance: string;
+}

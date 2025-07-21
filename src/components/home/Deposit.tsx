@@ -25,10 +25,12 @@ import {
 import { TransactionServices } from "@/app/api/transaction.api";
 import { IResponse } from "@/interfaces/response.interface";
 import { CustomDialog } from "../common/CustomDialog";
+import { ICurrency } from "@/interfaces/currency.interface";
+import { IDepositResponse } from "@/interfaces/transaction.interface";
 
 interface DepositProps {
   walletId: string;
-  currencies: string[];
+  currencies: ICurrency[];
   refetch: () => void;
 }
 function Deposit({ walletId, currencies, refetch }: DepositProps) {
@@ -61,14 +63,16 @@ function Deposit({ walletId, currencies, refetch }: DepositProps) {
       const response = (await TransactionServices.deposit(walletId, {
         amount: Number(values.amount),
         currency: values.currency,
-      })) as IResponse<unknown>;
+      })) as IResponse<IDepositResponse>;
 
       setOpen(true);
       if (response.data) {
         refetch();
 
         setTitleDialog("Deposit Success ✅");
-        setDescriptionDialog("Deposit successfully");
+        setDescriptionDialog(
+          "Deposit successfully. amount: " + response.data.depositAmount
+        );
         form.setValue("amount", "");
         form.clearErrors();
       } else {
@@ -119,9 +123,9 @@ function Deposit({ walletId, currencies, refetch }: DepositProps) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {currencies.map((currency) => (
-                            <SelectItem key={currency} value={currency}>
-                              {currency}
+                          {currencies.map((item) => (
+                            <SelectItem key={item.id} value={item.currency}>
+                              {item.currency}
                             </SelectItem>
                           ))}
                         </SelectContent>

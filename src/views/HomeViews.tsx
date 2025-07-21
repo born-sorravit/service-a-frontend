@@ -1,18 +1,39 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import Withdraw from "@/components/home/Withdraw";
 import Deposit from "@/components/home/Deposit";
 import UserInfo from "@/components/home/UserInfo";
 import { useUserStore } from "@/stores/user/user.modal";
+import { useCurrencyStore } from "@/stores/currency/currency.modal";
+import { CurrencyServices } from "@/app/api/currency.api";
+import { ICurrency } from "@/interfaces/currency.interface";
+import { IResponse } from "@/interfaces/response.interface";
 
 function HomeViews() {
   const { user, refetch } = useUserStore();
-  console.log({ user });
+  const { currency, setCurrency } = useCurrencyStore();
 
-  const currencies = ["USD", "THB", "EUR", "JPY", "BTC"];
+  const fetchCurrency = async () => {
+    try {
+      const response = (await CurrencyServices.getCurrency()) as IResponse<
+        ICurrency[]
+      >;
 
+      console.log(response);
+
+      if (response.data) {
+        setCurrency(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCurrency();
+  }, []);
   return (
     <div className="p-6 max-w-xl mx-auto space-y-3">
       <h1 className="text-2xl font-bold mb-4 text-center">
@@ -32,14 +53,14 @@ function HomeViews() {
         <TabsContent value="deposit">
           <Deposit
             walletId={user?.wallet?.id || ""}
-            currencies={currencies}
+            currencies={currency}
             refetch={refetch}
           />
         </TabsContent>
 
         {/* Withdraw */}
         <TabsContent value="withdraw">
-          <Withdraw currencies={currencies} />
+          <Withdraw currencies={currency} />
         </TabsContent>
 
         {/* Payment */}
