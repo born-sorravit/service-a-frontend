@@ -1,6 +1,5 @@
 import React from "react";
 import { Card, CardContent } from "../ui/card";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import {
   Select,

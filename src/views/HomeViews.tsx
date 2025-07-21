@@ -60,7 +60,11 @@ function HomeViews() {
 
         {/* Withdraw */}
         <TabsContent value="withdraw">
-          <Withdraw currencies={currency} />
+          <Withdraw
+            walletId={user?.wallet?.id || ""}
+            currencies={currency}
+            refetch={refetch}
+          />
         </TabsContent>
 
         {/* Payment */}

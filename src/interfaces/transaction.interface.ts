@@ -17,3 +17,12 @@ export interface IDepositResponse {
   totalBalance: number;
   currencyBalance: string;
 }
+
+export interface IWithdrawResponse {
+  id: string;
+  withdrawnAmount: number;
+  withdrawnCurrency: string;
+  rateToUSD: number;
+  totalBalance: number;
+  currencyBalance: string;
+}
