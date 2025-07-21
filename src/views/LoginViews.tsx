@@ -12,7 +12,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { IResponse } from "@/interfaces/response.interface";
+import { IUserInfo } from "@/interfaces/user.interface";
 import { loginSchema } from "@/schema/login.schema";
+import { useUserStore } from "@/stores/user/user.modal";
 import { encryptPassword } from "@/utils/hashPassword";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -22,6 +24,7 @@ import z from "zod";
 
 function LoginViews() {
   const router = useRouter();
+  const { setUser } = useUserStore();
   const [open, setOpen] = React.useState(false);
   const [titleDialog, setTitleDialog] = React.useState("");
   const [descriptionDialog, setDescriptionDialog] = React.useState("");
@@ -44,11 +47,6 @@ function LoginViews() {
         passwordSecret,
         username
       );
-      console.log({
-        username,
-        encryptedPassword,
-        passwordSecret,
-      });
 
       const response = (await AuthServices.login(
         username,
@@ -59,10 +57,11 @@ function LoginViews() {
         form.reset();
         form.clearErrors();
         router.push("/home");
+        setUser(response.data as IUserInfo);
       } else {
         // Handle registration error
         setOpen(true);
-        setTitleDialog("Login Failed");
+        setTitleDialog("Login Failed ❌");
         setDescriptionDialog("Something went wrong. Please try again.");
       }
     } catch (error) {
