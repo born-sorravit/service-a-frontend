@@ -54,10 +54,10 @@ function LoginViews() {
       )) as IResponse<unknown>;
 
       if (response.data) {
-        form.reset();
-        form.clearErrors();
         router.push("/home");
         setUser(response.data as IUserInfo);
+        form.reset();
+        form.clearErrors();
       } else {
         // Handle registration error
         setOpen(true);

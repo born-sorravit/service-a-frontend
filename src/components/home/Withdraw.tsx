@@ -115,10 +115,7 @@ function Withdraw({ walletId, currencies, refetch }: WithdrawProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Currency</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={ECurrency.USD}
-                      >
+                      <Select onValueChange={field.onChange}>
                         <FormControl>
                           <SelectTrigger className="w-[80px]">
                             <SelectValue />
