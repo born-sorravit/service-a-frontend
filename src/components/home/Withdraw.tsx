@@ -27,6 +27,7 @@ import {
 } from "../ui/form";
 import { CustomDialog } from "../common/CustomDialog";
 import { ECurrency } from "@/enums/currency.enum";
+import { formatNumber } from "@/utils/formatNumber";
 
 interface WithdrawProps {
   walletId: string;
@@ -73,7 +74,9 @@ function Withdraw({ walletId, currencies, refetch }: WithdrawProps) {
         refetch();
         setTitleDialog("Withdraw Success ✅");
         setDescriptionDialog(
-          `Withdraw successfully. amount : ${response.data.withdrawnAmount}, to : ${values.toUsername} `
+          `Withdraw successfully. amount : ${formatNumber(
+            response.data.withdrawnAmount.toString()
+          )} ${response.data.withdrawnCurrency}, to : ${values.toUsername} `
         );
         form.setValue("amount", "");
         form.clearErrors();
@@ -82,7 +85,10 @@ function Withdraw({ walletId, currencies, refetch }: WithdrawProps) {
         setDescriptionDialog("Something went wrong. Please try again.");
       }
     } catch (error) {
+      setOpen(true);
       console.log(error);
+      setTitleDialog("Withdraw Failed ❌");
+      setDescriptionDialog("Something went wrong. Please try again.");
     }
   };
   return (
