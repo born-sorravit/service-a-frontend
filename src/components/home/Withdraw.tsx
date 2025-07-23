@@ -82,7 +82,7 @@ function Withdraw({ walletId, currencies, refetch }: WithdrawProps) {
         form.clearErrors();
       } else {
         setTitleDialog("Withdraw Failed ❌");
-        setDescriptionDialog("Something went wrong. Please try again.");
+        setDescriptionDialog("Username not found. Please try again.");
       }
     } catch (error) {
       setOpen(true);
