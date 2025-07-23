@@ -60,10 +60,9 @@ function HomeViews() {
       <UserInfo user={user} />
 
       <Tabs defaultValue="deposit" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="deposit">Deposit</TabsTrigger>
           <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
-          <TabsTrigger value="payment">Payment</TabsTrigger>
         </TabsList>
 
         {/* Deposit */}
@@ -82,17 +81,6 @@ function HomeViews() {
             currencies={currency}
             refetch={refetch}
           />
-        </TabsContent>
-
-        {/* Payment */}
-        <TabsContent value="payment">
-          <Card>
-            <CardContent className="pt-4">
-              <p className="text-sm text-muted-foreground">
-                Payment function here...
-              </p>
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>
